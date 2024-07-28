@@ -1,8 +1,29 @@
-import os import subprocess import shutil
+import os
+import subprocess
+import shutil
 
-    def get_available_cpp_versions() :versions =["98", "03", "11", "14", "17", "20", "23"] available_versions =[] for version in versions:result = subprocess.run(["g++", f "-std=c++{version}", "-x", "c++", "-E", "-"], input = "", capture_output = True, text = True) if result.returncode == 0 :available_versions.append(version) return available_versions
+def get_available_cpp_versions():
+    versions = ["98", "03", "11", "14", "17", "20", "23"]
+    available_versions = []
+    for version in versions:
+        result = subprocess.run(
+            ["g++", f"-std=c++{version}", "-x", "c++", "-E", "-"],
+            input="", capture_output=True, text=True
+        )
+        if result.returncode == 0:
+            available_versions.append(version)
+    return available_versions
 
-                                                                                                                                                                   def select_cpp_version(available_versions) :print("Available C++ standard versions:") for idx, version in enumerate(available_versions) :print(f "{idx + 1}. C++{version}") default_version = available_versions[- 1] print(f "Press Enter to select the default version: C++{default_version}") selection = input("Select a C++ standard version: ") if selection.isdigit() :index = int(selection) - 1 if 0 <= index < len(available_versions):
+def select_cpp_version(available_versions):
+    print("Available C++ standard versions:")
+    for idx, version in enumerate(available_versions):
+        print(f"{idx + 1}. C++{version}")
+    default_version = available_versions[-1]
+    print(f"Press Enter to select the default version: C++{default_version}")
+    selection = input("Select a C++ standard version: ")
+    if selection.isdigit():
+        index = int(selection) - 1
+        if 0 <= index < len(available_versions):
             return available_versions[index]
     return default_version
 
