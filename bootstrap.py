@@ -57,11 +57,10 @@ def create_cmakelists(root_dir, project_name, cmake_version, cpp_version, export
         f.write(
             f'cmake_minimum_required(VERSION {cmake_version})\n'
             f'project({project_name})\n\n'
+            f'{"set(CMAKE_EXPORT_COMPILE_COMMANDS ON)" if export_compile_commands else ""}\n'
             f'set(CMAKE_CXX_STANDARD {cpp_version})\n\n'
             'add_executable(${PROJECT_NAME} src/main.cpp)\n'
         )
-        if export_compile_commands:
-            f.write('set(CMAKE_EXPORT_COMPILE_COMMANDS ON)\n')
     print(f"Created CMakeLists.txt in {root_dir}.")
 
 def create_readme(root_dir, project_name, project_description):
@@ -155,15 +154,6 @@ def main():
     use_conan = input("Would you like to use Conan for dependencies? (y/N): ").strip().lower() == "y"
     if use_conan:
         create_conanfile(root_dir)
-
-    add_git_submodule(root_dir, "git@github.com:cpp-toolbox/clang_formatting.git", "clang_formatting")
-    add_git_submodule(root_dir, "git@github.com:cpp-toolbox/sbpt.git", "sbpt")
-
-    self_delete = input("Would you like this script to delete itself after setup? (y/N): ").strip().lower() == "y"
-    if self_delete:
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        print(f"Deleting {script_dir}...")
-        shutil.rmtree(script_dir)
 
     print("Project setup complete!")
 
