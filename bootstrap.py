@@ -1,6 +1,7 @@
 import os
 import subprocess
 import shutil
+from user_input.main import get_yes_no
 
 def get_available_cpp_versions():
     versions = ["98", "03", "11", "14", "17", "20", "23"]
@@ -138,7 +139,7 @@ def main():
 
     initialize_git_repo(root_dir)
 
-    create_readme_file = input("Would you like to create a README.md for your project? (y/N): ").strip().lower() == "y"
+    create_readme_file = get_yes_no("Would you like to create a README.md for your project?")
     if create_readme_file:
         project_description = input("Enter a short description for your project: ")
         create_readme(root_dir, project_name, project_description)
@@ -146,12 +147,12 @@ def main():
     cmake_version = input("Enter the minimum CMake version (default is 3.10): ") or "3.10"
     available_cpp_versions = get_available_cpp_versions()
     cpp_version = select_cpp_version(available_cpp_versions)
-    export_compile_commands = input("Would you like to export compile commands? (y/N): ").strip().lower() == "y"
+    export_compile_commands = get_yes_no("Would you like to export compile commands?")
 
     create_main_cpp(root_dir)
     create_cmakelists(root_dir, project_name, cmake_version, cpp_version, export_compile_commands)
 
-    use_conan = input("Would you like to use Conan for dependencies? (y/N): ").strip().lower() == "y"
+    use_conan = get_yes_no("Would you like to use Conan for dependencies?")
     if use_conan:
         create_conanfile(root_dir)
 
