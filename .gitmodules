@@ -1,3 +1,9 @@
 [submodule "user_input"]
 	path = user_input
 	url = git@github.com:py-garden/user_input.git
+[submodule "text_utils"]
+	path = text_utils
+	url = git@github.com:py-garden/text_utils.git
+[submodule "fs_utils"]
+	path = fs_utils
+	url = git@github.com:py-garden/fs_utils.git
