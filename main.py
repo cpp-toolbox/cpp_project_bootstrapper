@@ -108,6 +108,7 @@ def create_conanfile(root_dir):
                 "glm/cci.20230113",
                 "stb/cci.20240531",
                 "nlohmann_json/3.11.3",
+                "assimp/5.4.3"
                        ])
         packages.extend(quick_selected_packages)
 
@@ -235,6 +236,7 @@ def main():
     print("cmake --preset conan-release && cmake --build --preset conan-release")
     print("cd build/Release")
     print("you can now run the executable")
+    print("consider grabbing some minimal working code here if you're going to do graphics: https://github.com/cpp-toolbox/mwe_glfw/blob/main/src/main.cpp")
 
 if __name__ == "__main__":
     main()
