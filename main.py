@@ -59,18 +59,18 @@ def create_cmakelists(root_dir, project_name, cmake_version, cpp_version, automa
 
 
         copy_asset_directory_command = """
-        add_custom_target(copy_resources ALL
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${PROJECT_SOURCE_DIR}/assets
-        ${PROJECT_BINARY_DIR}/assets
-        COMMENT "Copying resources into binary directory")
-        add_dependencies(${PROJECT_NAME} copy_resources)
+add_custom_target(copy_resources ALL
+COMMAND ${CMAKE_COMMAND} -E copy_directory
+${PROJECT_SOURCE_DIR}/assets
+${PROJECT_BINARY_DIR}/assets
+COMMENT "Copying resources into binary directory")
+add_dependencies(${PROJECT_NAME} copy_resources)
         """
 
         recursively_find_sources_command = """
-        file(GLOB_RECURSE SOURCES "src/*.cpp")
-        # Add the main executable
-        add_executable(${PROJECT_NAME} ${SOURCES})
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+# Add the main executable
+add_executable(${PROJECT_NAME} ${SOURCES})
         """
 
         main_source_command = "add_executable(${PROJECT_NAME} src/main.cpp)"
