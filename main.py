@@ -2,7 +2,7 @@ import os
 import subprocess
 import shutil
 from fs_utils.main import attempt_to_delete_files
-from user_input.main import get_yes_no, select_options
+from user_input.main import get_input_with_default, get_validated_input, get_yes_no, has_no_spaces, select_options
 
 def get_available_cpp_versions():
     versions = ["98", "03", "11", "14", "17", "20", "23"]
@@ -29,7 +29,7 @@ def select_cpp_version(available_versions):
             return available_versions[index]
     return default_version
 
-def get_project_root():
+def get_project_root() -> str:
     current_dir = os.getcwd()
     print(f"The current directory is: {current_dir}")
     root_dir = input(f"Enter the project root directory (default is current directory): ").strip()
@@ -104,11 +104,15 @@ def create_conanfile(root_dir):
         quick_selected_packages = select_options([
                 "glfw/3.4",
                 "glad/0.1.36",
+                "fmt/11.2.0",
                 "spdlog/1.14.1",
                 "glm/cci.20230113",
                 "stb/cci.20240531",
                 "nlohmann_json/3.11.3",
-                "assimp/5.4.3"
+                "assimp/5.4.3",
+                "enet/1.3.18",
+                "openal-soft/1.23.1",
+                "libsndfile/1.2.2"
                        ])
         packages.extend(quick_selected_packages)
 
@@ -177,7 +181,7 @@ def main():
     print("Welcome to the C++ Project Bootstrapper!")
     print("You can press Enter to accept the default value for any prompt.")
 
-    first_time_running = get_yes_no("Is it your first time running the boostrapper on this project?")
+    first_time_running = get_yes_no("Is it your first time running the bootstrapper on this project?")
 
     if not first_time_running:
         if get_yes_no("Do you want to remove some of the previously boostrapped files? (you will be prompted about what files next)"): 
@@ -196,11 +200,11 @@ def main():
     root_dir = get_project_root()
 
     if not os.path.isfile("README.md"):
-        project_name = input("Enter the name of your project: ")
-        initialize_git_repo(root_dir)
-
+        # initialize_git_repo(root_dir)
         create_readme_file = get_yes_no("Would you like to create a README.md for your project?")
         if create_readme_file:
+            print("ok, let's get some info about your project for the readme")
+            project_name = input("Enter the name of your project: ")
             project_description = input("Enter a short description for your project: ")
             create_readme(root_dir, project_name, project_description)
 
@@ -210,7 +214,8 @@ def main():
         cmake_version = input("Enter the minimum CMake version (default is 3.10): ") or "3.10"
         available_cpp_versions = get_available_cpp_versions()
         cpp_version = select_cpp_version(available_cpp_versions)
-        executable_name = input("What do you want to call your executable? (don't use spaces, use underscores)")
+        input_fun = lambda : get_input_with_default("What do you want to call your executable? (don't use spaces, use underscores", os.path.basename(root_dir))
+        executable_name = get_validated_input(input_fun, has_no_spaces, "exectuable should not contain spaces")
         automatically_find_sources = get_yes_no("Would you like to have source files (.cpp) automatically added as you work?") 
         export_compile_commands = get_yes_no("Would you like to export compile commands? (If you use a language server you want this, otherwise its not needed)")
         copy_assets_to_build_directory = get_yes_no("Do you have an assets directory you'd like to copy to the build directory?")
@@ -221,7 +226,7 @@ def main():
     if os.path.isfile("conanfile.txt"):
         print("looks like you're using conan for dependencies, if you would like reconfigure them, delete conanfile.txt")
     else:
-        use_conan = get_yes_no("Would you like to use Conan for dependencies?")
+        use_conan = get_yes_no("Would you like to use conan for dependencies?")
         if use_conan:
             create_conanfile(root_dir)
 
