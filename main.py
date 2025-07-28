@@ -4,6 +4,20 @@ import shutil
 from fs_utils.main import attempt_to_delete_files
 from user_input.main import get_input_with_default, get_validated_input, get_yes_no, has_no_spaces, select_options
 
+import shutil
+
+def get_python_command():
+    """
+    Returns the appropriate Python command: 'python3' if available,
+    otherwise 'python' if available. Raises an error if neither is found.
+    """
+    if shutil.which("python3"):
+        return "python3"
+    elif shutil.which("python"):
+        return "python"
+    else:
+        raise EnvironmentError("Neither 'python3' nor 'python' is available in PATH.")
+
 def get_available_cpp_versions():
     versions = ["98", "03", "11", "14", "17", "20", "23"]
     available_versions = []
@@ -233,7 +247,7 @@ def main():
     use_clangd = get_yes_no("Will you be using clangd as a language server?")
 
     if use_clangd:
-        subprocess.run(["python", "scripts/clang_formatting/main.py", "."])
+        subprocess.run([get_python_command(), "scripts/clang_formatting/main.py", "."])
 
     print("Project setup complete. Next steps:")
     print("conan install .")
