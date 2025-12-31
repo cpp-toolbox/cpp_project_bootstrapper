@@ -145,9 +145,15 @@ add_dependencies(${PROJECT_NAME} copy_resources)
         """
 
         recursively_find_sources_command = """
+# add all cpp files
 file(GLOB_RECURSE SOURCES "src/*.cpp")
-# Add the main executable
+# add the main executable
 add_executable(${PROJECT_NAME} ${SOURCES})
+
+# automatically adds new source files
+foreach(_source ${SOURCES})
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${_source})
+endforeach()
         """
 
         main_source_command = "add_executable(${PROJECT_NAME} src/main.cpp)"
